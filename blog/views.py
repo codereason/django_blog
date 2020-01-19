@@ -11,20 +11,56 @@ from django.shortcuts import render
 import markdown
 from django.shortcuts import get_object_or_404, render
 import mistune
-
+from django.utils.text import slugify
+from markdown.extensions.toc import TocExtension
+import re
 from .models import Post
 
 
 def detail(request, pk):
     post = get_object_or_404(Post, pk=pk)
-    # post.body = markdown.markdown(post.body,
-    #                               extensions=[
-    #                                   'markdown.extensions.extra',
-    #                                   'markdown.extensions.codehilite',
-    #                                   'markdown.extensions.toc',
-    #                               ])
+    md = markdown.Markdown(extensions=[
+        'markdown.extensions.extra',
+        'markdown.extensions.codehilite',
+        TocExtension(slugify=slugify),
+    ])
+    post.body = md.convert(post.body)
     post.body = mistune.html(post.body)
+    m = re.search(r'<div class="toc">\s*<ul>(.*)</ul>\s*</div>', md.toc, re.S)
+    post.toc = m.group(1) if m is not None else ''
+
     return render(request, 'blog/detail.html', context={'post': post})
+
+
+# def detail(request, pk):
+#     post = get_object_or_404(Post, pk=pk)
+#     # post.body = markdown.markdown(post.body,
+#     #                               extensions=[
+#     #                                   'markdown.extensions.extra',
+#     #                                   'markdown.extensions.codehilite',
+#     #                                   'markdown.extensions.toc',
+#     #                               ])
+#
+#     '''
+#     生成TOC目录
+#     '''
+#
+#     md = markdown.Markdown(extensions=[
+#         'markdown.extensions.extra',
+#         'markdown.extensions.codehilite',
+#         # 记得在顶部引入 TocExtension 和 slugify
+#         TocExtension(slugify=slugify),
+#     ])
+#     # _body = markdown.markdown(post.body,
+#     #                               extensions=[
+#     #                                   'markdown.extensions.extra',
+#     #                                   'markdown.extensions.codehilite',
+#     #                                   'markdown.extensions.toc',
+#     #                               ])
+#     post.body = mistune.html(post.body)
+#     m = re.search(r'<div class="toc">\s*<ul>(.*)</ul>\s*</div>', md.toc, re.S)
+#     post.toc = m.group(1) if m is not None else ''
+#     return render(request, 'blog/detail.html', context={'post': post})
 
 
 def index(request):
