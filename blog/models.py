@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 from django.db import models
 
 # Create your models here.
-#分类数据库表
+# 分类数据库表
 from django.urls import reverse
 from django.utils import timezone
 from django.utils.html import strip_tags
@@ -11,14 +11,16 @@ from django.utils.html import strip_tags
 
 class Category(models.Model):
     name = models.CharField(max_length=100)
+
     def __str__(self):
         return self.name
 
     class Meta:
         verbose_name = '分类'
         verbose_name_plural = verbose_name
-class Tag(models.Model):
 
+
+class Tag(models.Model):
     name = models.CharField(max_length=100)
 
     class Meta:
@@ -27,6 +29,7 @@ class Tag(models.Model):
 
     def __str__(self):
         return self.name
+
 
 class Post(models.Model):
     title = models.CharField('标题', max_length=70)
@@ -39,6 +42,10 @@ class Post(models.Model):
     author = models.ForeignKey(User, verbose_name='作者', on_delete=models.CASCADE)
     views = models.PositiveIntegerField(default=0, editable=False)
 
+    def increase_views(self):
+        self.views += 1
+        self.save(update_fields=['views'])
+
     def save(self, *args, **kwargs):
         md = markdown.Markdown(extensions=[
             'markdown.extensions.extra',
@@ -49,7 +56,8 @@ class Post(models.Model):
         super().save(*args, **kwargs)
 
     def get_absolute_url(self):
-        return reverse('blog:detail', kwargs = {'pk': self.pk})
+        return reverse('blog:detail', kwargs={'pk': self.pk})
+
     class Meta:
         verbose_name = '文章'
         verbose_name_plural = verbose_name

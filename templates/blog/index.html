@@ -14,10 +14,15 @@
                                                               datetime="{{ post.created_time }}">{{ post.created_time }}</time></a></span>
                     <span class="post-author"><a href="#">{{ post.author }}</a></span>
                     <span class="comments-link"><a href="{{ post.get_absolute_url }}#comment-area">
-                        {% if  post.comment_set.count != 0 %}{{ post.comment_set.count }} 评论
+                        {% if  post.comment_set.count != 0 %}{{ post.comment_set.count }}
+                            <i class="fa fa-comment-o"></i>
                         {% else %}无评论
                         {% endif %}</a></span>
-                    <span class="views-count"><a href="#">588 阅读</a></span>
+                    <span class="views-count"><a href="{{ post.get_absolute_url }}">
+                                              {% if  post.views != 0 %}{{ post.views }} <i class="fa fa-eye"></i>
+                                              {% else %}暂无阅读
+                                              {% endif %}</a></span>
+
                 </div>
             </header>
             <div class="entry-content clearfix">
