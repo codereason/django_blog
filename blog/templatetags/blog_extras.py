@@ -22,7 +22,7 @@ inclusion_tag 装饰器的参数 takes_context 设置为 True 时将告诉 djang
     :return:
     '''
     return {
-        'recent_post_list': Post.objects.all().order_by('-created_time')[:num],
+        'recent_post_list': Post.objects.all()[:num],
     }
 
 @register.inclusion_tag('blog/inclusions/_archives.html', takes_context=True)
