@@ -3,9 +3,18 @@
     <ul>
 
         {% for date in date_list %}
-            <li>
-                <a href="{% url 'blog:archive' date.year date.month %}">{{ date.year }} 年 {{ date.month }} 月</a>
-            </li>
+{#            <li>#}
+{#                <a href="{% url 'blog:archive' date.0 date.1 %}">{{ date.0 }} 年 {{ date.1 }} 月<span#}
+{#                        class="post-count">({{ date.2 }})</span></a>#}
+{#            </li>#}
+{#&emsp;{{ date | date:"Y 年 m 月" }}#}
+            {% if  date.2 != 0 %}
+                <li>
+                    <a href="{% url 'blog:archive' date.0 date.1 %}">&emsp;{{ date.0 }} 年 {{ date.1 }} 月<span
+                            class="post-count">({{ date.2 }})</span></a>
+                </li>
+
+            {% endif %}
         {% empty %}
             暂无归档！
         {% endfor %}
