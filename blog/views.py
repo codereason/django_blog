@@ -158,7 +158,9 @@ class PostDetailView(DetailView):
 
 def search(request):
     q =  request.GET.get("q")
+
     if not q:
+        
         error_msg = "请输入搜索关键词"
         messages.add_message(request,messages.ERROR,error_msg,extra_tags="danger")
         return redirect("blog:index")
