@@ -76,6 +76,13 @@ class IndexView(PaginationMixin,ListView):
     context_object_name = 'post_list'
     paginate_by = 8
 
+class AboutView(ListView):
+    # model = Post
+    template_name = 'blog/about.html'
+    # context_object_name = 'post_list'
+    # paginate_by = 8
+
+
 
 class CategoryView(IndexView):
 
